@@ -67,7 +67,8 @@ class OnboardingFixtureValidationRequest(BaseModel):
 
 def create_app(db_path: str | None = None, plugin_root: str | None = None) -> FastAPI:
     package_root = Path(__file__).resolve().parent.parent
-    db_path = db_path or os.getenv("ULPF_DB_PATH", str(package_root / "data" / "ulpf.db"))
+    default_db_path = "/tmp/ulpf.db" if os.getenv("VERCEL") else str(package_root / "data" / "ulpf.db")
+    db_path = db_path or os.getenv("ULPF_DB_PATH", default_db_path)
     plugin_root = plugin_root or os.getenv("ULPF_PLUGIN_DIR", str(package_root / "plugins"))
 
     store = SQLiteStore(db_path)
