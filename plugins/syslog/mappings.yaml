@@ -1,0 +1,36 @@
+mapping_version: 1.0.0
+extension_namespace: syslog
+defaults:
+  event.category: network
+  event.type: connection
+  observer.vendor: Generic
+  observer.product: RFC5424 Syslog
+fields:
+  timestamp:
+    target: "@timestamp"
+    required: true
+  hostname:
+    target: observer.name
+  src:
+    target: source.ip
+  spt:
+    target: source.port
+    cast: integer
+  dst:
+    target: destination.ip
+  dpt:
+    target: destination.port
+    cast: integer
+  proto:
+    target: network.transport
+    transform: normalize_transport
+  app:
+    target: network.application
+    transform: normalize_application
+  action:
+    target: event.action
+    transform: normalize_action
+    required: true
+  severity:
+    target: event.severity
+    transform: normalize_syslog_severity

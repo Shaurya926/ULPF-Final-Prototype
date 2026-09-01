@@ -1,0 +1,15 @@
+version: 0.1
+classes:
+  - NETWORK_CONNECTION
+  - FIREWALL_ALLOW
+  - FIREWALL_DENY
+  - VPN_EVENT
+  - AUTH_EVENT
+  - IDS_ALERT
+normalization:
+  action:
+    ALLOW: [accept, allow, permit]
+    DENY: [deny, drop, reject, block]
+  transport:
+    TCP: [6, tcp, TCP]
+    UDP: [17, udp, UDP]

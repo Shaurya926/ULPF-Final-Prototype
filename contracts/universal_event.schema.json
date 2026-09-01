@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ulpf.local/schema/universal-event-v0.1.json",
+  "title": "ULPF Universal Event Schema v0.1",
+  "type": "object",
+  "required": ["event_id", "@timestamp", "event", "observer", "extensions", "raw", "provenance"],
+  "properties": {
+    "event_id": {"type": "string", "pattern": "^evt_"},
+    "@timestamp": {"type": "string", "format": "date-time"},
+    "event": {
+      "type": "object",
+      "required": ["category", "type"],
+      "properties": {
+        "category": {"type": "string"},
+        "type": {"type": "string"},
+        "action": {"type": "string"},
+        "severity": {"type": "string"},
+        "outcome": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "source": {"$ref": "#/$defs/endpoint"},
+    "destination": {"$ref": "#/$defs/endpoint"},
+    "network": {
+      "type": "object",
+      "properties": {
+        "transport": {"type": "string"},
+        "application": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "observer": {
+      "type": "object",
+      "required": ["vendor", "product"],
+      "properties": {
+        "vendor": {"type": "string"},
+        "product": {"type": "string"},
+        "name": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "extensions": {"type": "object"},
+    "raw": {
+      "type": "object",
+      "required": ["event_id", "payload", "sha256"],
+      "properties": {
+        "event_id": {"type": "string", "pattern": "^raw_"},
+        "payload": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["parser_id", "parser_version", "mapping_version", "detection_confidence", "detection_evidence", "field_trace"],
+      "properties": {
+        "parser_id": {"type": "string"},
+        "parser_version": {"type": "string"},
+        "mapping_version": {"type": "string"},
+        "detection_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "detection_evidence": {"type": "array", "items": {"type": "string"}},
+        "field_trace": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "endpoint": {
+      "type": "object",
+      "properties": {
+        "ip": {"type": "string", "format": "ip"},
+        "port": {"type": "integer", "minimum": 0, "maximum": 65535}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

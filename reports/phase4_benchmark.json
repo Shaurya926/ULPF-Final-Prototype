@@ -1,0 +1,38 @@
+{
+  "batch_duration_s": 14.973895306999992,
+  "benchmark_name": "ULPF Phase 4 single-process engine baseline",
+  "dataset": "datasets/judge_demo.log repeated round-robin; synthetic telemetry",
+  "events": 500,
+  "events_per_sec": 33.39144489451987,
+  "failure_rate": 0.0,
+  "failures": 0,
+  "generated_at": "2026-08-26T19:00:00.436867Z",
+  "hardware": {
+    "cpu_count": 5,
+    "machine": "x86_64",
+    "platform": "Linux-6.18.35-x86_64-with-glibc2.41",
+    "processor": "unknown",
+    "python": "3.13.5"
+  },
+  "latency_ms": {
+    "max": 112.21643199999676,
+    "mean": 29.945115723999606,
+    "min": 17.342991999981905,
+    "p50": 26.5330434999953,
+    "p95": 51.272869200013794
+  },
+  "memory_mb": {
+    "max_rss_delta": 28.625,
+    "process_max_rss_after": 139.73828125,
+    "process_max_rss_before": 111.11328125
+  },
+  "methodology": {
+    "claim_scope": "local prototype baseline only; not production-scale throughput",
+    "concurrency": 1,
+    "http_included": false,
+    "network_included": false,
+    "path": "CoreEngine.process -> SQLiteStore",
+    "warmup_excluded": false
+  },
+  "stored": 500
+}

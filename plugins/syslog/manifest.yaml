@@ -1,0 +1,23 @@
+id: syslog
+version: 1.0.0
+vendor: Generic
+product: RFC5424 Syslog
+format: rfc5424
+enabled: true
+parser:
+  file: parser.py
+  function: parse
+detection: detection.yaml
+mappings: mappings.yaml
+required_fields:
+  - timestamp
+  - hostname
+  - action
+optional_fields:
+  - src
+  - spt
+  - dst
+  - dpt
+  - proto
+  - app
+  - severity

@@ -1,0 +1,1 @@
+<134>1 2026-08-26T11:30:00Z edge-fw.example ULPFGEN 1234 ID47 [net@32473 src="10.0.0.5" spt="52134" dst="8.8.8.8" dpt="443" proto="tcp" action="allow" app="https" policy="internet-access"] connection allowed

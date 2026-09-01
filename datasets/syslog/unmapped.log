@@ -1,0 +1,1 @@
+<134>1 2026-08-26T11:33:00Z edge-fw.example ULPFGEN 1234 ID49 [net@32473 src="10.0.0.8" spt="53000" dst="9.9.9.9" dpt="53" proto="udp" action="allow" app="dns" custom_alpha="preserve-me"] custom field example

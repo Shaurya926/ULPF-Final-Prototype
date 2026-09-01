@@ -1,0 +1,41 @@
+{
+  "dataset": {
+    "synthetic": true,
+    "events": 10
+  },
+  "stored": 10,
+  "deny_filter_count": 5,
+  "cross_vendor_equivalence": {
+    "fortigate_action": "ALLOW",
+    "cisco_action": "ALLOW",
+    "same_action": true
+  },
+  "hero_inspector": {
+    "raw_exact": true,
+    "field_trace_entries": 14,
+    "validation": "PASS"
+  },
+  "unknown_source": {
+    "status": "QUARANTINED",
+    "reason": "UNKNOWN_SOURCE",
+    "detection_attempts": 5,
+    "detected_structure": "key_value"
+  },
+  "onboarding": {
+    "preview_ready": false,
+    "warnings": [
+      "event.action is not normalized to ALLOW/DENY: 'maybe'"
+    ],
+    "draft_status": "DRAFT_REVIEW_REQUIRED",
+    "auto_activated": false
+  },
+  "local_throughput_measurement": {
+    "id": 1,
+    "source": "batch",
+    "batch_size": 10,
+    "elapsed_ms": 321.0055360000297,
+    "events_per_sec": 31.152110722473882,
+    "created_at": "2026-08-26T18:16:15.504409Z"
+  },
+  "throughput_notice": "Last local ingestion measurement (not a benchmark)"
+}

@@ -1,0 +1,1 @@
+date=2026-08-26 time=17:02:00 tz="+0530" devname="FGT-EDGE-01" logid="0000000013" type="traffic" subtype="forward" srcip=10.0.0.7 dstip=1.1.1.1 dstport=53 proto=17 action="accept"

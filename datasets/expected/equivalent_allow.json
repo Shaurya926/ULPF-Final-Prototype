@@ -1,0 +1,21 @@
+{
+  "description": "Canonical semantic subset expected from each vendor's allow fixture",
+  "expected": {
+    "@timestamp": "2026-08-26T11:30:00Z",
+    "event.category": "network",
+    "event.type": "connection",
+    "event.action": "ALLOW",
+    "source.ip": "10.0.0.5",
+    "source.port": 52134,
+    "destination.ip": "8.8.8.8",
+    "destination.port": 443,
+    "network.transport": "TCP"
+  },
+  "sources": [
+    "fortigate/allow.log",
+    "cisco_asa/allow.log",
+    "palo_alto/allow.log",
+    "cef/allow.log",
+    "syslog/allow.log"
+  ]
+}

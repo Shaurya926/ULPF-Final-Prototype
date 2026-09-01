@@ -1,0 +1,1 @@
+date=not-a-date time=99:99:99 tz="+0530" devname="FGT-BROKEN" type="traffic" action="accept" srcip=10.0.0.5 dstip=8.8.8.8

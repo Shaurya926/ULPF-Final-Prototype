@@ -1,0 +1,24 @@
+id: cef
+version: 1.0.0
+vendor: CEF
+product: Common Event Format
+format: cef
+enabled: true
+parser:
+  file: parser.py
+  function: parse
+detection: detection.yaml
+mappings: mappings.yaml
+required_fields:
+  - timestamp
+  - device_vendor
+  - device_product
+  - act
+optional_fields:
+  - src
+  - spt
+  - dst
+  - dpt
+  - proto
+  - app
+  - severity

@@ -1,0 +1,30 @@
+{
+  "valid": [
+    {"path":"fortigate/allow.log","plugin_id":"fortigate","action":"ALLOW"},
+    {"path":"fortigate/deny.log","plugin_id":"fortigate","action":"DENY"},
+    {"path":"fortigate/unmapped.log","plugin_id":"fortigate","action":"ALLOW","extension_key":"custom_alpha"},
+    {"path":"cisco_asa/allow.log","plugin_id":"cisco_asa","action":"ALLOW"},
+    {"path":"cisco_asa/deny.log","plugin_id":"cisco_asa","action":"DENY"},
+    {"path":"cisco_asa/unmapped.log","plugin_id":"cisco_asa","action":"ALLOW","extension_key":"message"},
+    {"path":"palo_alto/allow.log","plugin_id":"palo_alto","action":"ALLOW"},
+    {"path":"palo_alto/deny.log","plugin_id":"palo_alto","action":"DENY"},
+    {"path":"palo_alto/unmapped.log","plugin_id":"palo_alto","action":"ALLOW","extension_key":"custom_alpha"},
+    {"path":"cef/allow.log","plugin_id":"cef","action":"ALLOW"},
+    {"path":"cef/deny.log","plugin_id":"cef","action":"DENY"},
+    {"path":"cef/unmapped.log","plugin_id":"cef","action":"ALLOW","extension_key":"cs2"},
+    {"path":"syslog/allow.log","plugin_id":"syslog","action":"ALLOW"},
+    {"path":"syslog/deny.log","plugin_id":"syslog","action":"DENY"},
+    {"path":"syslog/unmapped.log","plugin_id":"syslog","action":"ALLOW","extension_key":"custom_alpha"}
+  ],
+  "malformed": [
+    {"path":"malformed/fortigate.log","expected_plugin":"fortigate"},
+    {"path":"malformed/cisco_asa.log","expected_plugin":"cisco_asa"},
+    {"path":"malformed/palo_alto.log","expected_plugin":"palo_alto"},
+    {"path":"malformed/cef.log","expected_plugin":"cef"},
+    {"path":"malformed/syslog.log","expected_plugin":"syslog"}
+  ],
+  "unknown": [
+    {"path":"unknown/unknown_1.log"},
+    {"path":"unknown/unknown_2.log"}
+  ]
+}

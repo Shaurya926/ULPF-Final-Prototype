@@ -1,0 +1,11 @@
+{
+  "events": 10,
+  "export": "PASS",
+  "ingest": "PASS",
+  "inspect": "PASS",
+  "network_required": false,
+  "normalize": "PASS",
+  "note": "Process-level air-gap proof. Container runtime must be verified on the team's Docker host.",
+  "offline_engine_start": "PASS",
+  "restart_persistence": "PASS"
+}

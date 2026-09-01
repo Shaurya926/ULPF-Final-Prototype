@@ -1,0 +1,1 @@
+2026-08-26T11:33:00Z PAN-OS,TRAFFIC,end,vsys1,trust,untrust,10.0.0.8,9.9.9.9,53000,53,udp,dns,allow,informational,sessionid=4244,rule=dns-out,custom_alpha=preserve-me

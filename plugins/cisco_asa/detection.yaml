@@ -1,0 +1,9 @@
+confidence: 0.98
+rules:
+  all_contains:
+    - "%ASA-"
+  any_contains:
+    - " permitted "
+    - " denied "
+  all_regex:
+    - '%ASA-[0-7]-[0-9]+:'

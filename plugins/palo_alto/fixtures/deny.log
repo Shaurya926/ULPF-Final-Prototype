@@ -1,0 +1,1 @@
+2026-08-26T11:31:00Z PAN-OS,TRAFFIC,drop,vsys1,trust,untrust,10.0.0.25,203.0.113.80,49152,22,tcp,ssh,deny,warning,sessionid=4243,rule=block-ssh

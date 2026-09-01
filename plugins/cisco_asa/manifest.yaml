@@ -1,0 +1,25 @@
+id: cisco_asa
+version: 1.0.0
+vendor: Cisco
+product: ASA
+format: syslog_text
+enabled: true
+parser:
+  file: parser.py
+  function: parse
+detection: detection.yaml
+mappings: mappings.yaml
+required_fields:
+  - timestamp
+  - result
+  - proto
+  - srcip
+  - dstip
+optional_fields:
+  - srcport
+  - dstport
+  - severity
+  - message_id
+  - acl
+  - src_zone
+  - dst_zone

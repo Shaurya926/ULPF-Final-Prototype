@@ -1,0 +1,12 @@
+confidence: 0.99
+rules:
+  all_contains:
+    - "date="
+    - "time="
+    - "type="
+    - "action="
+  any_contains:
+    - "devname="
+    - "devid="
+    - "logid="
+    - "subtype="

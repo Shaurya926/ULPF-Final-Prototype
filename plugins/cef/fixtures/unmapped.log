@@ -1,0 +1,1 @@
+2026-08-26T11:33:00Z CEF:0|SyntheticVendor|EdgeFirewall|1.0|102|DNS connection|3|src=10.0.0.8 spt=53000 dst=9.9.9.9 dpt=53 proto=UDP act=allow app=dns cs2Label=custom cs2=preserve-me

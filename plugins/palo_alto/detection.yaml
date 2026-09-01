@@ -1,0 +1,7 @@
+confidence: 0.97
+rules:
+  all_contains:
+    - "PAN-OS,"
+    - ",TRAFFIC,"
+  all_regex:
+    - '^\S+\s+PAN-OS,TRAFFIC,'

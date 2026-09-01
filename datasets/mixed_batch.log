@@ -1,0 +1,9 @@
+date=2026-08-26 time=17:00:00 tz="+0530" devname="FGT-EDGE-01" devid="FG100FTK00000001" logid="0000000013" type="traffic" subtype="forward" level="notice" vd="root" srcip=10.0.0.5 srcport=52134 srcintf="port2" dstip=8.8.8.8 dstport=443 dstintf="wan1" srccountry="Reserved" dstcountry="United States" sessionid=12345 proto=6 action="accept" policyid=7 service="HTTPS" trandisp="noop" duration=3 sentbyte=982 rcvdbyte=2048 msg="Allowed HTTPS session"
+
+2026-08-26T11:30:00Z asa-edge-01 %ASA-6-106100: access-list OUTSIDE_IN permitted tcp inside/10.0.0.5(52134) -> outside/8.8.8.8(443) hit-cnt 1 first-hit
+
+2026-08-26T11:30:00Z PAN-OS,TRAFFIC,end,vsys1,trust,untrust,10.0.0.5,8.8.8.8,52134,443,tcp,https,allow,informational,sessionid=4242,rule=internet-access
+
+2026-08-26T11:30:00Z CEF:0|SyntheticVendor|EdgeFirewall|1.0|100|Allowed connection|5|src=10.0.0.5 spt=52134 dst=8.8.8.8 dpt=443 proto=TCP act=permit app=https cs1Label=policy cs1=internet-access
+
+<134>1 2026-08-26T11:30:00Z edge-fw.example ULPFGEN 1234 ID47 [net@32473 src="10.0.0.5" spt="52134" dst="8.8.8.8" dpt="443" proto="tcp" action="allow" app="https" policy="internet-access"] connection allowed

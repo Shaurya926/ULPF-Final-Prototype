@@ -1,0 +1,36 @@
+mapping_version: 1.0.0
+extension_namespace: palo_alto
+defaults:
+  event.category: network
+  event.type: connection
+  observer.vendor: Palo Alto Networks
+  observer.product: PAN-OS
+fields:
+  timestamp:
+    target: "@timestamp"
+    required: true
+  srcip:
+    target: source.ip
+    required: true
+  srcport:
+    target: source.port
+    cast: integer
+  dstip:
+    target: destination.ip
+    required: true
+  dstport:
+    target: destination.port
+    cast: integer
+  proto:
+    target: network.transport
+    transform: normalize_transport
+  app:
+    target: network.application
+    transform: normalize_application
+  action:
+    target: event.action
+    transform: normalize_action
+    required: true
+  severity:
+    target: event.severity
+    transform: normalize_severity

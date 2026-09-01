@@ -1,0 +1,1 @@
+2026-08-26T11:30:00Z asa-edge-01 %ASA-6-106100: access-list OUTSIDE_IN permitted tcp inside/10.0.0.5(52134) -> outside/8.8.8.8(443) hit-cnt 1 first-hit

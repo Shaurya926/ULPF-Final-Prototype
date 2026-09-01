@@ -1,0 +1,25 @@
+id: palo_alto
+version: 1.0.0
+vendor: Palo Alto Networks
+product: PAN-OS
+format: csv
+enabled: true
+parser:
+  file: parser.py
+  function: parse
+detection: detection.yaml
+mappings: mappings.yaml
+required_fields:
+  - timestamp
+  - log_type
+  - srcip
+  - dstip
+  - action
+optional_fields:
+  - srcport
+  - dstport
+  - proto
+  - app
+  - severity
+  - src_zone
+  - dst_zone

@@ -1,0 +1,1 @@
+date=2026-08-26 time=17:01:00 tz="+0530" devname="FGT-EDGE-01" devid="FG100FTK00000001" logid="0000000013" type="traffic" subtype="forward" level="warning" vd="root" srcip=10.0.0.25 srcport=49152 dstip=203.0.113.80 dstport=22 proto=6 action="deny" policyid=12 service="SSH" msg="Denied outbound SSH"

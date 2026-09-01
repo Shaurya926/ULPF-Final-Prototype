@@ -1,0 +1,38 @@
+mapping_version: 1.0.0
+extension_namespace: fortigate
+defaults:
+  event.category: network
+  event.type: connection
+  observer.vendor: Fortinet
+  observer.product: FortiGate
+fields:
+  __timestamp:
+    sources: [date, time, tz]
+    target: "@timestamp"
+    transform: normalize_fortigate_timestamp
+    required: true
+  srcip:
+    target: source.ip
+  srcport:
+    target: source.port
+    cast: integer
+  dstip:
+    target: destination.ip
+  dstport:
+    target: destination.port
+    cast: integer
+  proto:
+    target: network.transport
+    transform: normalize_transport
+  service:
+    target: network.application
+    transform: normalize_application
+  action:
+    target: event.action
+    transform: normalize_action
+    required: true
+  level:
+    target: event.severity
+    transform: normalize_severity
+  devname:
+    target: observer.name

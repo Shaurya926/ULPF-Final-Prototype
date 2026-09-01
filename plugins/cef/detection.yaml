@@ -1,0 +1,6 @@
+confidence: 0.96
+rules:
+  all_contains:
+    - "CEF:"
+  all_regex:
+    - 'CEF:[0-9]+\|[^|]+\|[^|]+\|'

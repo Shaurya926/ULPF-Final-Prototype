@@ -1,0 +1,19 @@
+services:
+  ulpf:
+    build: .
+    image: ulpf-sih2026:phase4
+    ports:
+      - "8000:8000"
+    environment:
+      ULPF_DB_PATH: /data/ulpf.db
+      ULPF_PLUGIN_DIR: /app/plugins
+      ULPF_MAX_EVENT_BYTES: "65536"
+      ULPF_MAX_FILE_BYTES: "5242880"
+      ULPF_MAX_BATCH_EVENTS: "10000"
+      ULPF_MAX_BATCH_BYTES: "5242880"
+    volumes:
+      - ulpf_data:/data
+    restart: unless-stopped
+
+volumes:
+  ulpf_data:

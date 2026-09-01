@@ -1,0 +1,87 @@
+{
+  "airgap_process_check": {
+    "events": 10,
+    "export": "PASS",
+    "ingest": "PASS",
+    "inspect": "PASS",
+    "network_required": false,
+    "normalize": "PASS",
+    "note": "Process-level air-gap proof. Container runtime must be verified on the team's Docker host.",
+    "offline_engine_start": "PASS",
+    "restart_persistence": "PASS"
+  },
+  "benchmark_snapshot": {
+    "claim_scope": "local prototype baseline only; not production-scale throughput",
+    "events": 500,
+    "events_per_sec": 33.39144489451987,
+    "failure_rate": 0.0,
+    "p50_ms": 26.5330434999953,
+    "p95_ms": 51.272869200013794
+  },
+  "claim_guardrails": [
+    "Synthetic/sanitized telemetry is labelled.",
+    "Benchmark is a reproducible local prototype baseline, not production scale.",
+    "Known-source parsing remains deterministic and offline.",
+    "Authoring assistance never auto-activates mappings."
+  ],
+  "generated_at": "2026-08-26T19:01:33.600708Z",
+  "name": "ULPF final hackathon gate",
+  "rehearsals": [
+    {
+      "benchmark_visible": true,
+      "deny_filter_count": 5,
+      "deny_vendor_count": 5,
+      "detection_attempts": 5,
+      "draft_auto_activated": false,
+      "draft_status": "DRAFT_REVIEW_REQUIRED",
+      "field_trace_entries": 14,
+      "health_phase": 5,
+      "inspector_validation": "PASS",
+      "ndjson_lines": 10,
+      "raw_recovery": "PASS",
+      "rehearsal": 1,
+      "stored": 10,
+      "synthetic_events": 10,
+      "unknown_reason": "UNKNOWN_SOURCE",
+      "unknown_status": "QUARANTINED"
+    },
+    {
+      "benchmark_visible": true,
+      "deny_filter_count": 5,
+      "deny_vendor_count": 5,
+      "detection_attempts": 5,
+      "draft_auto_activated": false,
+      "draft_status": "DRAFT_REVIEW_REQUIRED",
+      "field_trace_entries": 14,
+      "health_phase": 5,
+      "inspector_validation": "PASS",
+      "ndjson_lines": 10,
+      "raw_recovery": "PASS",
+      "rehearsal": 2,
+      "stored": 10,
+      "synthetic_events": 10,
+      "unknown_reason": "UNKNOWN_SOURCE",
+      "unknown_status": "QUARANTINED"
+    },
+    {
+      "benchmark_visible": true,
+      "deny_filter_count": 5,
+      "deny_vendor_count": 5,
+      "detection_attempts": 5,
+      "draft_auto_activated": false,
+      "draft_status": "DRAFT_REVIEW_REQUIRED",
+      "field_trace_entries": 14,
+      "health_phase": 5,
+      "inspector_validation": "PASS",
+      "ndjson_lines": 10,
+      "raw_recovery": "PASS",
+      "rehearsal": 3,
+      "stored": 10,
+      "synthetic_events": 10,
+      "unknown_reason": "UNKNOWN_SOURCE",
+      "unknown_status": "QUARANTINED"
+    }
+  ],
+  "status": "PASS",
+  "three_consecutive_rehearsals": "PASS"
+}

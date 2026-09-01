@@ -1,0 +1,38 @@
+mapping_version: 1.0.0
+extension_namespace: cef
+defaults:
+  event.category: network
+  event.type: connection
+fields:
+  timestamp:
+    target: "@timestamp"
+    required: true
+  device_vendor:
+    target: observer.vendor
+    required: true
+  device_product:
+    target: observer.product
+    required: true
+  src:
+    target: source.ip
+  spt:
+    target: source.port
+    cast: integer
+  dst:
+    target: destination.ip
+  dpt:
+    target: destination.port
+    cast: integer
+  proto:
+    target: network.transport
+    transform: normalize_transport
+  app:
+    target: network.application
+    transform: normalize_application
+  act:
+    target: event.action
+    transform: normalize_action
+    required: true
+  severity:
+    target: event.severity
+    transform: normalize_cef_severity

@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset='utf-8'><title>ULPF Final Preview</title><style>@page { size: 1440px 1080px; margin:0 }*{box-sizing:border-box}body{margin:0;background:#07111f;color:#eaf2ff;font-family:Inter,Segoe UI,Arial,sans-serif;width:1440px;height:1080px;overflow:hidden}.wrap{padding:42px}.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}h1{font-size:54px;line-height:1;margin:0 0 10px}.tag{color:#8db3ff;font-size:20px}.badge{display:inline-block;background:#163463;border:1px solid #2f61ad;border-radius:999px;padding:9px 14px;margin-left:8px;color:#dbe9ff;font-weight:700}.grid{display:grid;grid-template-columns:360px 1fr;gap:24px}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:#0d1d33;border:1px solid #1f3e67;border-radius:24px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.28)}.metric strong{display:block;font-size:38px;color:#fff}.metric span{color:#9fb5d6;font-size:15px}h2{font-size:26px;margin:0 0 16px}table{width:100%;border-collapse:collapse;font-size:15px}th{text-align:left;color:#9fb5d6;font-weight:700;padding:10px 8px;border-bottom:1px solid #27476f}td{padding:11px 8px;border-bottom:1px solid #1a3356;color:#e9f2ff}.pill{border-radius:999px;padding:5px 10px;font-weight:800}.deny{background:#572033;color:#ffb4c3}.flow{margin-top:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}pre{white-space:pre-wrap;font-size:12px;line-height:1.35;color:#d6e8ff;background:#07131f;border:1px solid #1f3e67;border-radius:16px;padding:14px;height:190px;overflow:hidden}.trace ul{margin:0;padding-left:20px;color:#dbe9ff;font-size:14px}.status{font-size:18px;color:#b9ffdc}.bottom{margin-top:20px;display:grid;grid-template-columns:2fr 1fr;gap:20px}.note{color:#abc2e3;font-size:17px;line-height:1.45}.logo{font-size:18px;font-weight:800;letter-spacing:.12em;color:#7db0ff}.accent{color:#65e3ff}</style></head><body><div class='wrap'><div class='top'><div><div class='logo'>SIH26156 · NTRO</div><h1>ULPF Final Prototype</h1><div class='tag'>One schema. Any supported perimeter device. Zero forensic data loss.</div></div><div><span class='badge'>5 adapters</span><span class='badge'>Offline core</span><span class='badge'>Phase 5 gate passed</span></div></div><div class='grid'><div><div class='metrics'><div class='card metric'><strong>10</strong><span>stored events in preview</span></div><div class='card metric'><strong>5</strong><span>DENY vendors</span></div><div class='card metric'><strong>33.4</strong><span>events/sec local benchmark</span></div><div class='card metric'><strong>51.3ms</strong><span>p95 latency</span></div></div><div class='card trace' style='margin-top:18px'><h2>Field trace sample</h2><ul><li><b>@timestamp</b> ← [&#x27;date&#x27;, &#x27;time&#x27;, &#x27;tz&#x27;]</li><li><b>destination.ip</b> ← dstip</li><li><b>destination.port</b> ← dstport</li><li><b>event.action</b> ← action</li><li><b>event.category</b> ← default</li><li><b>event.severity</b> ← level</li></ul><p class='status'>Validation: PASS · Raw SHA-256 retained</p></div></div><div class='card'><h2>Unified Event Explorer · filter: <span class='accent'>event.action = DENY</span></h2><table><thead><tr><th>timestamp</th><th>vendor</th><th>product</th><th>source</th><th>destination</th><th>port</th><th>protocol</th><th>action</th><th>parser</th></tr></thead><tbody><tr><td>2026-08-26T11:31:00</td><td>Generic</td><td>RFC5424 Syslog</td><td>10.0.0.25</td><td>203.0.113.80</td><td>22</td><td>TCP</td><td><span class='pill deny'>DENY</span></td><td>1.0.0</td></tr><tr><td>2026-08-26T11:31:00</td><td>SyntheticVendor</td><td>EdgeFirewall</td><td>10.0.0.25</td><td>203.0.113.80</td><td>22</td><td>TCP</td><td><span class='pill deny'>DENY</span></td><td>1.0.0</td></tr><tr><td>2026-08-26T11:31:00</td><td>Palo Alto Networks</td><td>PAN-OS</td><td>10.0.0.25</td><td>203.0.113.80</td><td>22</td><td>TCP</td><td><span class='pill deny'>DENY</span></td><td>1.0.0</td></tr><tr><td>2026-08-26T11:31:00</td><td>Cisco</td><td>ASA</td><td>10.0.0.25</td><td>203.0.113.80</td><td>22</td><td>TCP</td><td><span class='pill deny'>DENY</span></td><td>1.0.0</td></tr><tr><td>2026-08-26T11:31:00</td><td>Fortinet</td><td>FortiGate</td><td>10.0.0.25</td><td>203.0.113.80</td><td>22</td><td>TCP</td><td><span class='pill deny'>DENY</span></td><td>1.0.0</td></tr></tbody></table><div class='flow'><div><h2>RAW</h2><pre>date=2026-08-26 time=17:00:00 tz=&quot;+0530&quot; devname=&quot;FGT-EDGE-01&quot; devid=&quot;FG100FTK00000001&quot; logid=&quot;0000000013&quot; type=&quot;traffic&quot; subtype=&quot;forward&quot; level=&quot;notice&quot; vd=&quot;root&quot; srcip=10.0.0.5 srcport=52134 srcintf=&quot;port2&quot; dstip=8.8.</pre></div><div><h2>PARSED</h2><pre>{
+  &quot;action&quot;: &quot;accept&quot;,
+  &quot;date&quot;: &quot;2026-08-26&quot;,
+  &quot;devid&quot;: &quot;FG100FTK00000001&quot;,
+  &quot;devname&quot;: &quot;FGT-EDGE-01&quot;,
+  &quot;dstcountry&quot;: &quot;United States&quot;,
+  &quot;dstintf&quot;: &quot;wan1&quot;,
+  &quot;dstip&quot;: &quot;8.8.8.8&quot;,
+  &quot;dstport&quot;: &quot;443&quot;,
+  &quot;duration&quot;: &quot;3&quot;,
+  &quot;level&quot;: &quot;notice&quot;,
+  &quot;logid&quot;: &quot;0000000013&quot;,
+  &quot;msg&quot;: &quot;Al</pre></div><div><h2>NORMALIZED</h2><pre>{
+  &quot;event&quot;: {
+    &quot;action&quot;: &quot;ALLOW&quot;,
+    &quot;category&quot;: &quot;network&quot;,
+    &quot;severity&quot;: &quot;NOTICE&quot;,
+    &quot;type&quot;: &quot;connection&quot;
+  },
+  &quot;source&quot;: {
+    &quot;ip&quot;: &quot;10.0.0.5&quot;,
+    &quot;port&quot;: 52134
+  },
+  &quot;destination&quot;: {
+    &quot;ip&quot;: &quot;8.8.8.8&quot;,
+    &quot;port&quot;: 443
+  },
+  &quot;network&quot;: {
+    &quot;application&quot;: &quot;https&quot;,
+    &quot;transport&quot;: &quot;TCP&quot;
+  },
+  &quot;observer&quot;: {
+    &quot;name&quot;: &quot;FGT-EDGE-01&quot;,
+    &quot;product&quot;: &quot;FortiGate&quot;,
+    &quot;vendor&quot;: &quot;Fortinet&quot;
+  },
+  &quot;prov</pre></div></div></div></div><div class='bottom'><div class='card note'><b>Judge story:</b> different vendor log languages enter one deterministic pipeline, become one universal schema, and still retain exact forensic raw evidence with parser/mapping provenance.</div><div class='card note'><b>Claim guardrail:</b> benchmark is a reproducible local prototype baseline, not a production scale claim.</div></div></div></body></html>

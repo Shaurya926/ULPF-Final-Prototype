@@ -1,0 +1,1 @@
+<134>1 2026-08-26T11:50:00Z edge-fw.example ULPFGEN 1234 ID50 [net@32473 src="10.0.0.5" dst="8.8.8.8" proto="tcp"] missing action should quarantine

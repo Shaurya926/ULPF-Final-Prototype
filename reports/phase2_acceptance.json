@@ -1,0 +1,251 @@
+{
+  "adapter_acceptance_matrix_percent": {
+    "cef": {
+      "detection_accuracy": 100.0,
+      "malformed_handling": 100.0,
+      "parse_success": 100.0,
+      "provenance_completeness": 100.0,
+      "raw_retention": 100.0,
+      "required_field_extraction": 100.0,
+      "taxonomy_correctness": 100.0,
+      "unmapped_retention": 100.0
+    },
+    "cisco_asa": {
+      "detection_accuracy": 100.0,
+      "malformed_handling": 100.0,
+      "parse_success": 100.0,
+      "provenance_completeness": 100.0,
+      "raw_retention": 100.0,
+      "required_field_extraction": 100.0,
+      "taxonomy_correctness": 100.0,
+      "unmapped_retention": 100.0
+    },
+    "fortigate": {
+      "detection_accuracy": 100.0,
+      "malformed_handling": 100.0,
+      "parse_success": 100.0,
+      "provenance_completeness": 100.0,
+      "raw_retention": 100.0,
+      "required_field_extraction": 100.0,
+      "taxonomy_correctness": 100.0,
+      "unmapped_retention": 100.0
+    },
+    "palo_alto": {
+      "detection_accuracy": 100.0,
+      "malformed_handling": 100.0,
+      "parse_success": 100.0,
+      "provenance_completeness": 100.0,
+      "raw_retention": 100.0,
+      "required_field_extraction": 100.0,
+      "taxonomy_correctness": 100.0,
+      "unmapped_retention": 100.0
+    },
+    "syslog": {
+      "detection_accuracy": 100.0,
+      "malformed_handling": 100.0,
+      "parse_success": 100.0,
+      "provenance_completeness": 100.0,
+      "raw_retention": 100.0,
+      "required_field_extraction": 100.0,
+      "taxonomy_correctness": 100.0,
+      "unmapped_retention": 100.0
+    }
+  },
+  "corpus_notice": "All Phase 2 telemetry is synthetic test data, not production telemetry.",
+  "details": [
+    {
+      "detection_ok": true,
+      "path": "fortigate/allow.log",
+      "plugin": "fortigate",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "fortigate/deny.log",
+      "plugin": "fortigate",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "fortigate/unmapped.log",
+      "plugin": "fortigate",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "cisco_asa/allow.log",
+      "plugin": "cisco_asa",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "cisco_asa/deny.log",
+      "plugin": "cisco_asa",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "cisco_asa/unmapped.log",
+      "plugin": "cisco_asa",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "palo_alto/allow.log",
+      "plugin": "palo_alto",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "palo_alto/deny.log",
+      "plugin": "palo_alto",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "palo_alto/unmapped.log",
+      "plugin": "palo_alto",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "cef/allow.log",
+      "plugin": "cef",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "cef/deny.log",
+      "plugin": "cef",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "cef/unmapped.log",
+      "plugin": "cef",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "syslog/allow.log",
+      "plugin": "syslog",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "syslog/deny.log",
+      "plugin": "syslog",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "detection_ok": true,
+      "path": "syslog/unmapped.log",
+      "plugin": "syslog",
+      "provenance_ok": true,
+      "raw_ok": true,
+      "status": "STORED",
+      "taxonomy_ok": true,
+      "unmapped_retention_ok": true
+    },
+    {
+      "malformed_handling_ok": true,
+      "path": "malformed/fortigate.log",
+      "plugin": "fortigate",
+      "reason": "MAPPINGERROR"
+    },
+    {
+      "malformed_handling_ok": true,
+      "path": "malformed/cisco_asa.log",
+      "plugin": "cisco_asa",
+      "reason": "VALUEERROR"
+    },
+    {
+      "malformed_handling_ok": true,
+      "path": "malformed/palo_alto.log",
+      "plugin": "palo_alto",
+      "reason": "VALUEERROR"
+    },
+    {
+      "malformed_handling_ok": true,
+      "path": "malformed/cef.log",
+      "plugin": "cef",
+      "reason": "VALUEERROR"
+    },
+    {
+      "malformed_handling_ok": true,
+      "path": "malformed/syslog.log",
+      "plugin": "syslog",
+      "reason": "MAPPINGERROR"
+    },
+    {
+      "path": "unknown/unknown_1.log",
+      "plugin": null,
+      "unknown_source_safety_ok": true
+    },
+    {
+      "path": "unknown/unknown_2.log",
+      "plugin": null,
+      "unknown_source_safety_ok": true
+    }
+  ],
+  "malformed_events": 5,
+  "unknown_events": 2,
+  "unknown_source_safety_percent": 100.0,
+  "valid_events": 15
+}

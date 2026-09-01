@@ -1,0 +1,36 @@
+mapping_version: 1.0.0
+extension_namespace: cisco_asa
+defaults:
+  event.category: network
+  event.type: connection
+  observer.vendor: Cisco
+  observer.product: ASA
+fields:
+  timestamp:
+    target: "@timestamp"
+    required: true
+  hostname:
+    target: observer.name
+  srcip:
+    target: source.ip
+    required: true
+  srcport:
+    target: source.port
+    cast: integer
+  dstip:
+    target: destination.ip
+    required: true
+  dstport:
+    target: destination.port
+    cast: integer
+  proto:
+    target: network.transport
+    transform: normalize_transport
+    required: true
+  result:
+    target: event.action
+    transform: normalize_action
+    required: true
+  severity:
+    target: event.severity
+    transform: normalize_syslog_severity

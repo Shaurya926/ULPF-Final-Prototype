@@ -1,0 +1,1 @@
+2026-08-26T11:31:00Z CEF:0|SyntheticVendor|EdgeFirewall|1.0|101|Denied connection|7|src=10.0.0.25 spt=49152 dst=203.0.113.80 dpt=22 proto=TCP act=block app=ssh cs1Label=policy cs1=block-ssh

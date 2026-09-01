@@ -1,0 +1,1 @@
+2026-08-26T11:33:00Z asa-edge-01 %ASA-6-106100: access-list DNS_OUT permitted udp inside/10.0.0.8(53000) -> outside/9.9.9.9(53) hit-cnt 7 custom-tail-value

@@ -1,0 +1,1 @@
+2026-08-26T11:30:00Z PAN-OS,TRAFFIC,end,vsys1,trust,untrust,10.0.0.5,8.8.8.8,52134,443,tcp,https,allow,informational,sessionid=4242,rule=internet-access

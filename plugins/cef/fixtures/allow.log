@@ -1,0 +1,1 @@
+2026-08-26T11:30:00Z CEF:0|SyntheticVendor|EdgeFirewall|1.0|100|Allowed connection|5|src=10.0.0.5 spt=52134 dst=8.8.8.8 dpt=443 proto=TCP act=permit app=https cs1Label=policy cs1=internet-access

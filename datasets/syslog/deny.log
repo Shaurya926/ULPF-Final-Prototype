@@ -1,0 +1,1 @@
+<132>1 2026-08-26T11:31:00Z edge-fw.example ULPFGEN 1234 ID48 [net@32473 src="10.0.0.25" spt="49152" dst="203.0.113.80" dpt="22" proto="tcp" action="deny" app="ssh" policy="block-ssh"] connection denied

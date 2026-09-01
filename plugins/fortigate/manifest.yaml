@@ -1,0 +1,26 @@
+id: fortigate
+version: 1.0.0
+vendor: Fortinet
+product: FortiGate
+format: key_value
+enabled: true
+parser:
+  file: parser.py
+  function: parse
+detection: detection.yaml
+mappings: mappings.yaml
+required_fields:
+  - date
+  - time
+  - tz
+  - type
+  - action
+optional_fields:
+  - srcip
+  - srcport
+  - dstip
+  - dstport
+  - proto
+  - service
+  - level
+  - devname
