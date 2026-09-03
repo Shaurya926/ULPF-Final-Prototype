@@ -37,32 +37,93 @@ import json
 import re
 import shlex
 
-KV_RE = re.compile(r'(?P<key>[A-Za-z_][\w.-]*)=(?P<value>"(?:[^"\\]|\\.)*"|\S+)')
+KV_RE = re.compile(
+    r'(?P<key>[A-Za-z_][\w.-]*)='
+    r'(?P<value>"(?:[^"\\]|\\.)*"|\S+)'
+)
+
+ISO_TS_RE = re.compile(
+    r'\b\d{4}-\d{2}-\d{2}T'
+    r'\d{2}:\d{2}:\d{2}'
+    r'(?:\.\d+)?'
+    r'(?:Z|[+-]\d{2}:?\d{2})\b'
+)
+
+IP_RE = re.compile(
+    r'\b(?:\d{1,3}\.){3}\d{1,3}\b'
+)
 
 
-def parse(payload: str) -> dict[str, object]:
-    text = payload.strip()
-    try:
-        parsed = json.loads(text)
-        if isinstance(parsed, dict):
-            return parsed
-    except json.JSONDecodeError:
-        pass
-
+def _parse_kv(text: str) -> dict[str, object]:
     fields: dict[str, object] = {}
+
     for match in KV_RE.finditer(text):
         value = match.group("value")
+
         if value.startswith('"') and value.endswith('"'):
             try:
                 value = shlex.split(value)[0]
             except (ValueError, IndexError):
                 value = value[1:-1]
+
         fields[match.group("key")] = value
+
+    return fields
+
+
+def parse(payload: str) -> dict[str, object]:
+    text = payload.strip()
+
+    if not text:
+        raise ValueError("empty payload")
+
+    fields: dict[str, object] = {}
+
+    # 1. JSON object
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            fields = parsed
+    except json.JSONDecodeError:
+        pass
+
+    # 2. key=value structure
     if not fields:
-        raise ValueError("no structured key=value or JSON fields detected")
+        fields = _parse_kv(text)
+
+    # 3. Standalone ISO-8601 timestamp
+    #
+    # IMPORTANT:
+    # Keep this behavior aligned with onboarding.analyze_payload().
+    timestamp_match = ISO_TS_RE.search(text)
+
+    if timestamp_match and "_detected_timestamp" not in fields:
+        fields["_detected_timestamp"] = timestamp_match.group(0)
+
+    # 4. Fallback hints for otherwise unstructured logs
+    if not fields:
+        ips = IP_RE.findall(text)
+
+        fields = {
+            f"_detected_ip_{index + 1}": value
+            for index, value in enumerate(ips)
+        }
+
+        tokens = text.split()
+
+        for index, token in enumerate(tokens[:12]):
+            fields.setdefault(
+                f"_token_{index + 1}",
+                token,
+            )
+
+    if not fields:
+        raise ValueError(
+            "no structured fields detected"
+        )
+
     return fields
 '''
-
 
 def _rule_values(value: Any) -> list[str]:
     if value is None:
@@ -263,9 +324,24 @@ class PluginRegistry:
                     count = len(value) if isinstance(value, list) else 1
                     summary_parts.append(f"{key}:{count}")
         fixture_count = len(list((p.root / "fixtures").glob("*.log")))
+        
+        current_version = p.manifest["version"]
+        versions = []
+        versions_dir = p.root / "versions"
+        if versions_dir.exists():
+            for version_dir in versions_dir.iterdir():
+                if version_dir.is_dir() and (version_dir / "manifest.yaml").exists():
+                    versions.append(version_dir.name)
+        if current_version not in versions:
+            versions.append(current_version)
+        available_versions = self._sort_versions(versions)
+        
         return {
             "id": p.id,
-            "version": p.manifest["version"],
+            "version": current_version,
+            "active_version": current_version,
+            "version_count": len(available_versions),
+            "available_versions": available_versions,
             "vendor": p.manifest["vendor"],
             "product": p.manifest["product"],
             "format": p.manifest["format"],
@@ -345,3 +421,229 @@ class PluginRegistry:
     def detect(self, payload: str) -> DetectionResult | None:
         result, _ = self.detect_with_report(payload)
         return result
+
+    @staticmethod
+    def _parse_version(version: str) -> tuple[int, int, int] | None:
+        """Parse semantic version string into tuple of integers."""
+        pattern = r"^(\d+)\.(\d+)\.(\d+)$"
+        match = re.match(pattern, version)
+        if match:
+            return (int(match.group(1)), int(match.group(2)), int(match.group(3)))
+        return None
+
+    @staticmethod
+    def _version_tuple_to_str(major: int, minor: int, patch: int) -> str:
+        """Convert version tuple to string."""
+        return f"{major}.{minor}.{patch}"
+
+    @staticmethod
+    def _sort_versions(versions: list[str]) -> list[str]:
+        """Sort semantic versions numerically in descending order."""
+        parsed = [(v, PluginRegistry._parse_version(v)) for v in versions]
+        valid = [(v, p) for v, p in parsed if p is not None]
+        if not valid:
+            return sorted(versions, reverse=True)
+        sorted_versions = sorted(valid, key=lambda x: x[1], reverse=True)
+        return [v for v, _ in sorted_versions]
+
+    def _copy_plugin_contents(self, src_dir: Path, dest_dir: Path) -> None:
+        """Copy plugin contents (manifest, detection, mappings, parser, fixtures)."""
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        required_files = ["manifest.yaml", "detection.yaml", "mappings.yaml", "parser.py"]
+        for file_name in required_files:
+            src_file = src_dir / file_name
+            if src_file.exists():
+                dest_file = dest_dir / file_name
+                dest_file.write_text(src_file.read_text(encoding="utf-8"), encoding="utf-8")
+        
+        src_fixtures = src_dir / "fixtures"
+        if src_fixtures.exists():
+            dest_fixtures = dest_dir / "fixtures"
+            dest_fixtures.mkdir(exist_ok=True)
+            for log_file in src_fixtures.glob("*.log"):
+                dest_file = dest_fixtures / log_file.name
+                dest_file.write_text(log_file.read_text(encoding="utf-8"), encoding="utf-8")
+
+    def list_versions(self, plugin_id: str) -> dict[str, Any]:
+        """List all versions of a plugin, sorted numerically descending."""
+        plugin = self._all_plugins.get(plugin_id)
+        if plugin is None:
+            raise ContractError(f"plugin not found: {plugin_id}")
+        
+        versions_dir = plugin.root / "versions"
+        versions = []
+        
+        if versions_dir.exists():
+            for version_dir in versions_dir.iterdir():
+                if version_dir.is_dir() and (version_dir / "manifest.yaml").exists():
+                    versions.append(version_dir.name)
+        
+        current_version = plugin.manifest.get("version", "1.0.0")
+        if current_version not in versions:
+            versions.append(current_version)
+        
+        sorted_versions = self._sort_versions(versions)
+        
+        version_list = []
+        for version in sorted_versions:
+            version_list.append({
+                "version": version,
+                "active": version == current_version,
+            })
+        
+        return {
+            "plugin_id": plugin_id,
+            "active_version": current_version,
+            "versions": version_list,
+        }
+
+    def ensure_version_snapshot(self, plugin_id: str) -> None:
+        """Create an immutable snapshot of the current version if not already present."""
+        plugin = self._all_plugins.get(plugin_id)
+        if plugin is None:
+            raise ContractError(f"plugin not found: {plugin_id}")
+        
+        current_version = plugin.manifest.get("version", "1.0.0")
+        version_snapshot_dir = plugin.root / "versions" / current_version
+        
+        if not version_snapshot_dir.exists():
+            try:
+                self._copy_plugin_contents(plugin.root, version_snapshot_dir)
+            except (OSError, PermissionError) as exc:
+                raise ContractError(
+                    f"version management requires a writable local plugin directory: {exc}"
+                ) from exc
+
+    def create_version(
+        self,
+        plugin_id: str,
+        bump_type: str,
+        release_notes: str = "",
+    ) -> dict[str, Any]:
+        """Create a new version by bumping the current version."""
+        if bump_type not in ("patch", "minor", "major"):
+            raise ContractError(f"invalid bump_type: {bump_type}")
+        
+        plugin = self._all_plugins.get(plugin_id)
+        if plugin is None:
+            raise ContractError(f"plugin not found: {plugin_id}")
+        
+        current_version_str = plugin.manifest.get("version", "1.0.0")
+        parsed = self._parse_version(current_version_str)
+        if parsed is None:
+            raise ContractError(f"invalid current version format: {current_version_str}")
+        
+        major, minor, patch = parsed
+        
+        if bump_type == "patch":
+            patch += 1
+        elif bump_type == "minor":
+            minor += 1
+            patch = 0
+        elif bump_type == "major":
+            major += 1
+            minor = 0
+            patch = 0
+        
+        new_version = self._version_tuple_to_str(major, minor, patch)
+        
+        version_snapshot_dir = plugin.root / "versions" / new_version
+        if version_snapshot_dir.exists():
+            raise ContractError(f"version {new_version} already exists")
+        
+        try:
+            self.ensure_version_snapshot(plugin_id)
+            self._copy_plugin_contents(plugin.root, version_snapshot_dir)
+            
+            manifest_path = plugin.root / "manifest.yaml"
+            manifest = self._load_yaml(manifest_path)
+            manifest["version"] = new_version
+            manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+            
+            self.reload()
+            
+        except (OSError, PermissionError) as exc:
+            raise ContractError(
+                f"version management requires a writable local plugin directory: {exc}"
+            ) from exc
+        
+        return {
+            "previous_version": current_version_str,
+            "new_version": new_version,
+            "bump_type": bump_type,
+            "release_notes": release_notes,
+        }
+
+    def activate_version(self, plugin_id: str, version: str) -> dict[str, Any]:
+        """Activate a specific version of a plugin."""
+        parsed = self._parse_version(version)
+        if parsed is None:
+            raise ContractError(f"invalid version format: {version}")
+        
+        plugin = self._all_plugins.get(plugin_id)
+        if plugin is None:
+            raise ContractError(f"plugin not found: {plugin_id}")
+        
+        version_snapshot_dir = plugin.root / "versions" / version
+        if not version_snapshot_dir.exists():
+            raise ContractError(f"version {version} not found")
+        
+        current_version = plugin.manifest.get("version", "1.0.0")
+        
+        try:
+            self._copy_plugin_contents(version_snapshot_dir, plugin.root)
+            
+            manifest_path = plugin.root / "manifest.yaml"
+            manifest = self._load_yaml(manifest_path)
+            manifest["version"] = version
+            manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+            
+            self.reload()
+            
+        except (OSError, PermissionError) as exc:
+            raise ContractError(
+                f"version management requires a writable local plugin directory: {exc}"
+            ) from exc
+        
+        return {
+            "before": current_version,
+            "after": version,
+        }
+
+    def rollback_version(self, plugin_id: str, version: str) -> dict[str, Any]:
+        """Rollback to a specific version (uses activate_version internally)."""
+        plugin = self._all_plugins.get(plugin_id)
+        if plugin is None:
+            raise ContractError(f"plugin not found: {plugin_id}")
+        
+        current_version = plugin.manifest.get("version", "1.0.0")
+        result = self.activate_version(plugin_id, version)
+        result["rollback"] = True
+        return result
+
+    def get_version_details(self, plugin_id: str, version: str) -> dict[str, Any]:
+        """Get metadata about a specific version."""
+        plugin = self._all_plugins.get(plugin_id)
+        if plugin is None:
+            raise ContractError(f"plugin not found: {plugin_id}")
+        
+        parsed = self._parse_version(version)
+        if parsed is None:
+            raise ContractError(f"invalid version format: {version}")
+        
+        current_version = plugin.manifest.get("version", "1.0.0")
+        
+        version_snapshot_dir = plugin.root / "versions" / version
+        if not version_snapshot_dir.exists() and version != current_version:
+            raise ContractError(f"version {version} not found")
+        
+        manifest_path = (version_snapshot_dir if version_snapshot_dir.exists() else plugin.root) / "manifest.yaml"
+        manifest = self._load_yaml(manifest_path)
+        
+        return {
+            "version": version,
+            "active": version == current_version,
+            "vendor": manifest.get("vendor"),
+            "product": manifest.get("product"),
+            "format": manifest.get("format"),
+        }

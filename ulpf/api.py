@@ -65,6 +65,11 @@ class OnboardingFixtureValidationRequest(BaseModel):
     plugin_id: str = Field(default="draft_plugin", min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_-]+$")
 
 
+class VersionCreateRequest(BaseModel):
+    bump_type: str = Field(pattern=r"^(patch|minor|major)$")
+    release_notes: str = Field(default="")
+
+
 def create_app(db_path: str | None = None, plugin_root: str | None = None) -> FastAPI:
     package_root = Path(__file__).resolve().parent.parent
     default_db_path = "/tmp/ulpf.db" if os.getenv("VERCEL") else str(package_root / "data" / "ulpf.db")
@@ -155,6 +160,90 @@ def create_app(db_path: str | None = None, plugin_root: str | None = None) -> Fa
             return result
         except ContractError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.get("/api/v1/plugins/{plugin_id}/versions")
+    def plugin_versions(plugin_id: str) -> dict[str, object]:
+        try:
+            return registry.list_versions(plugin_id)
+        except ContractError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.post("/api/v1/plugins/{plugin_id}/versions")
+    def create_plugin_version(plugin_id: str, body: VersionCreateRequest) -> dict[str, object]:
+        try:
+            result = registry.create_version(plugin_id, body.bump_type, body.release_notes)
+            store.record_audit(
+                actor="local_operator",
+                action="PARSER_VERSION_CREATED",
+                object_type="plugin",
+                object_id=plugin_id,
+                details={
+                    "previous_version": result["previous_version"],
+                    "new_version": result["new_version"],
+                    "bump_type": result["bump_type"],
+                    "release_notes": result["release_notes"],
+                },
+            )
+            return {
+                "version": result["new_version"],
+                "previous_version": result["previous_version"],
+                "message": f"Version {result['new_version']} created and activated.",
+            }
+        except ContractError as exc:
+            error_code = 409 if "already exists" in str(exc) else (400 if "invalid" in str(exc).lower() else 500)
+            raise HTTPException(status_code=error_code, detail=str(exc)) from exc
+
+    @app.post("/api/v1/plugins/{plugin_id}/versions/{version}/activate")
+    def activate_plugin_version(plugin_id: str, version: str) -> dict[str, object]:
+        try:
+            result = registry.activate_version(plugin_id, version)
+            store.record_audit(
+                actor="local_operator",
+                action="PARSER_VERSION_ACTIVATED",
+                object_type="plugin",
+                object_id=plugin_id,
+                details={
+                    "before": result["before"],
+                    "after": result["after"],
+                },
+            )
+            return {
+                "version": version,
+                "message": f"Activated {plugin_id} v{version}.",
+            }
+        except ContractError as exc:
+            error_code = 404 if "not found" in str(exc) else (400 if "invalid" in str(exc).lower() else 500)
+            raise HTTPException(status_code=error_code, detail=str(exc)) from exc
+
+    @app.post("/api/v1/plugins/{plugin_id}/versions/{version}/rollback")
+    def rollback_plugin_version(plugin_id: str, version: str) -> dict[str, object]:
+        try:
+            result = registry.rollback_version(plugin_id, version)
+            store.record_audit(
+                actor="local_operator",
+                action="PARSER_VERSION_ROLLBACK",
+                object_type="plugin",
+                object_id=plugin_id,
+                details={
+                    "before": result["before"],
+                    "after": result["after"],
+                },
+            )
+            return {
+                "version": version,
+                "message": f"Rolled back {plugin_id} to v{version}.",
+            }
+        except ContractError as exc:
+            error_code = 404 if "not found" in str(exc) else (400 if "invalid" in str(exc).lower() else 500)
+            raise HTTPException(status_code=error_code, detail=str(exc)) from exc
+
+    @app.get("/api/v1/plugins/{plugin_id}/versions/{version}")
+    def get_plugin_version(plugin_id: str, version: str) -> dict[str, object]:
+        try:
+            return registry.get_version_details(plugin_id, version)
+        except ContractError as exc:
+            error_code = 404 if "not found" in str(exc) else (400 if "invalid" in str(exc).lower() else 500)
+            raise HTTPException(status_code=error_code, detail=str(exc)) from exc
 
     def _record(source: str, payloads: list[str]):
         try:

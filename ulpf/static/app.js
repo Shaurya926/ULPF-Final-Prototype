@@ -56,6 +56,16 @@ async function loadDataset(id, switchToIngest=true) {
   toast(`${d.label}: ${id} loaded`); return d;
 }
 document.querySelectorAll('[data-dataset]').forEach(btn => btn.addEventListener('click', () => loadDataset(btn.dataset.dataset)));
+document.querySelectorAll('.button[data-screen-jump]').forEach(btn => btn.addEventListener('click', () => switchScreen(btn.dataset.screenJump)));
+document.querySelectorAll('.vendor-source').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.vendor-source').forEach(item => {
+    const selected = item === btn;
+    item.classList.toggle('active', selected);
+    item.setAttribute('aria-pressed', String(selected));
+  });
+  const label = $('network-source-label');
+  if (label) label.textContent = btn.dataset.vendorSource.toUpperCase();
+}));
 $('judge-demo').addEventListener('click', async () => { try { await loadDataset('mixed'); } catch (e) { toast(e.message, true); } });
 
 function renderProcessResults(items) {
@@ -111,9 +121,48 @@ async function openInspector(eventId) {
 async function loadRegistry() {
   try {
     const plugins = await api('/api/v1/plugins'); const el=$('registry-grid');
-    el.innerHTML = plugins.map(p=>`<article class="plugin-card"><div class="plugin-top"><div><h4>${esc(p.vendor)} · ${esc(p.product)}</h4><p>${esc(p.id)} v${esc(p.version)}</p></div><button class="toggle ${p.enabled?'on':''}" data-plugin="${esc(p.id)}" data-enabled="${p.enabled}" aria-label="Toggle ${esc(p.id)}"></button></div><div class="plugin-meta"><div><span>Format</span><strong>${esc(p.format)}</strong></div><div><span>Contract</span><strong>${esc(p.contract_status)}</strong></div><div><span>Detection</span><strong>${esc(p.detection_summary)}</strong></div><div><span>Fixtures</span><strong>${esc(p.fixture_count)} test log(s)</strong></div></div></article>`).join('');
+    el.innerHTML = plugins.map(p=>`<article class="plugin-card"><div class="plugin-top"><div><h4>${esc(p.vendor)} · ${esc(p.product)}</h4><p>${esc(p.id)}</p><p class="version-label">v${esc(p.active_version)} ACTIVE</p></div><button class="toggle ${p.enabled?'on':''}" data-plugin="${esc(p.id)}" data-enabled="${p.enabled}" aria-label="Toggle ${esc(p.id)}"></button></div><div class="plugin-meta"><div><span>Format</span><strong>${esc(p.format)}</strong></div><div><span>Contract</span><strong>${esc(p.contract_status)}</strong></div><div><span>Detection</span><strong>${esc(p.detection_summary)}</strong></div><div><span>Fixtures</span><strong>${esc(p.fixture_count)} test log(s)</strong></div></div><div class="button-row"><button class="button small versions-btn" data-plugin="${esc(p.id)}" data-version-count="${p.version_count}">Versions (${p.version_count})</button></div></article>`).join('');
     el.querySelectorAll('.toggle').forEach(btn => btn.addEventListener('click', async () => { const enabled=btn.dataset.enabled!=='true'; try { await api(`/api/v1/plugins/${btn.dataset.plugin}/state`, {method:'PATCH', body:JSON.stringify({enabled})}); toast(`${btn.dataset.plugin} ${enabled?'enabled':'disabled'} for this runtime.`); loadRegistry(); loadOverview(); } catch(e){toast(e.message,true);} }));
+    el.querySelectorAll('.versions-btn').forEach(btn => btn.addEventListener('click', async () => { try { await openVersionPanel(btn.dataset.plugin); } catch(e){toast(e.message,true);} }));
   } catch(e){toast(`Registry failed: ${e.message}`,true);}
+}
+
+function compareVersions(a, b) {
+  const toParts = (version) => {
+    const match = /^\d+\.\d+\.\d+$/.exec(String(version || ''));
+    if (!match) return [0, 0, 0];
+    return match[0].split('.').map(Number);
+  };
+  const pa = toParts(a);
+  const pb = toParts(b);
+  for (let i = 0; i < 3; i += 1) {
+    if (pa[i] !== pb[i]) return pa[i] - pb[i];
+  }
+  return 0;
+}
+
+async function openVersionPanel(pluginId) {
+  try {
+    const data = await api(`/api/v1/plugins/${pluginId}/versions`);
+    const versionsHtml = data.versions.map(v => `<div class="version-item"><div><strong>v${esc(v.version)}</strong>${v.active ? ' <span class="badge">ACTIVE</span>' : ''}${!v.active ? `<div style="margin-top:8px"><button class="button small activate-version-btn" data-plugin="${esc(pluginId)}" data-version="${esc(v.version)}">Activate</button></div>` : ''}</div></div>`).join('');
+    const modal = document.createElement('div'); modal.className = 'modal-overlay'; modal.innerHTML = `<div class="modal-panel"><div class="modal-header"><h3>${esc(pluginId)} — Version History</h3><button class="button ghost" id="close-version-modal">×</button></div><div class="modal-body"><div class="versions-list">${versionsHtml}</div><div class="modal-section"><h4>Create New Version</h4><div class="form-group"><label>Bump type<select id="version-bump-type"><option value="patch">Patch (1.0.0 → 1.0.1)</option><option value="minor">Minor (1.0.0 → 1.1.0)</option><option value="major">Major (1.0.0 → 2.0.0)</option></select></label><label>Release notes<textarea id="version-release-notes" placeholder="Optional notes about this version" rows="2"></textarea></label></div><button id="create-version-btn" class="button primary" data-plugin="${esc(pluginId)}">Publish Version</button></div></div></div>`;
+    document.body.appendChild(modal);
+    modal.querySelector('#close-version-modal').addEventListener('click', () => modal.remove());
+    modal.querySelectorAll('.activate-version-btn').forEach(btn => btn.addEventListener('click', async () => {
+      try {
+        const v = btn.dataset.version;
+        const isRollback = compareVersions(data.active_version, v) > 0;
+        await api(`/api/v1/plugins/${btn.dataset.plugin}/versions/${v}/${isRollback ? 'rollback' : 'activate'}`, {method:'POST', body:'{}'});
+        toast(isRollback ? `Rolled back ${btn.dataset.plugin} to v${v}.` : `Activated ${btn.dataset.plugin} v${v}.`);
+        modal.remove();
+        loadRegistry();
+        loadOverview();
+      } catch (e) {
+        toast(e.message, true);
+      }
+    }));
+    modal.querySelector('#create-version-btn').addEventListener('click', async () => { try { const bumpType = $('version-bump-type').value; const releaseNotes = $('version-release-notes').value; const result = await api(`/api/v1/plugins/${pluginId}/versions`, {method:'POST', body:JSON.stringify({bump_type:bumpType, release_notes:releaseNotes})}); toast(`Version ${result.version} created and activated.`); modal.remove(); loadRegistry(); loadOverview(); } catch(e){toast(e.message,true);} });
+  } catch(e){ throw new Error(`Failed to load versions: ${e.message}`); }
 }
 
 function mappingOptions(selected='') { return targets.map(t=>`<option value="${esc(t)}" ${t===selected?'selected':''}>${esc(t || '— do not map —')}</option>`).join(''); }
