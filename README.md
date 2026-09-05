@@ -1044,9 +1044,13 @@ The project focuses on demonstrating the feasibility of a universal log preproce
 | Member           | Responsibility       |
 | ---------------- | -------------------- |
 | Aditya Jain      | Team Lead            |
-| Vishwajeet Singh | Backend Development  |
-| Shaurya          | Frontend Development |
+| Shaurya Dubey    | Frontend Development |
 | Pawani Sanghi    | Pitch & Presentation |
+| Vishwajeet Singh | Backend Development  |
+| Shourya Rai      | Research             |
+| Ramanjee Mishra  | Irresponsible        |
+
+
 
 The project is built collaboratively, with team members contributing across multiple areas when required.
 
